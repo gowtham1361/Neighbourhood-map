@@ -1,0 +1,81 @@
+<!doctype html>
+<html>
+
+<head>
+  <meta charset="utf-8">
+  <meta http-equiv="X-UA-Compatible" content="IE=edge">
+  <title>Neighbourhood Map </title>
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <link rel="stylesheet" href="css/normalize.css">
+  <style>
+    html,
+    body {
+      height: 100%;
+      margin: 0 auto;
+    }
+
+    #map {
+      height: 90%;
+      width: 90%;
+      left: 30%;
+    }
+
+    #floating-panel {
+      position: absolute;
+      top: 0;
+      right: 60%;
+      margin: 0 auto;
+      z-index: 5;
+      height: 90%;
+      width: 30%;
+      background-color: blue;
+      padding: 5px;
+      border: 1px solid #999;
+      text-align: center;
+      font-family: 'Roboto', 'sans-serif';
+      line-height: 30px;
+      padding-left: 10px;
+    }
+
+    input[type=text] {
+    width: 60%;
+    box-sizing: border-box;
+    border: 2px solid #ccc;
+    border-radius: 4px;
+    margin: 10px;
+    font-size: 16px;
+    background-color: white;
+    background-image: url('toolbar_find.png');
+    background-position: 3px 7px;
+    background-repeat: no-repeat;
+    padding: 12px 20px 12px 40px;
+    -webkit-transition: width 0.4s ease-in-out;
+    transition: width 0.4s ease-in-out;
+}
+.search_bar:focus {
+    width: 80%;
+    margin:0 auto;
+}
+.locationlist {
+  display: inline-block;
+}
+  </style>
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/knockout/3.4.1/knockout-min.js"></script>
+</head>
+
+<body>
+  	<div id="map"></div>
+  	<div id="floating-panel">
+        <form class='search_bar'>
+            <input class='search_bar' type="text" name="search" placeholder="Search.."  autocomplete='off'>
+        </form>
+  	<ul  data-bind="foreach: myList">
+        <li class='locationlist'><b data-bind="text: title"></b></li>
+    </ul>
+    </div>
+
+</body>
+<script src="js/map.js"></script>
+<script src="https://maps.googleapis.com/maps/api/js?key=AIzaSyCGXlcl6frLMK3SHnE4GMCnCBzEEWtA4u8&callback=initMap" async defer></script>
+
+</html>
