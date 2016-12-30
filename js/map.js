@@ -109,6 +109,9 @@ function initMap() {
     marker.addListener('click', function() {
       populateInfoWindow(this, largeInfowindow);
     });
+    marker.addListener('click', function () {
+      toggleBounce(this);
+    });
     bounds.extend(markers[i].position);
   }
   // Extend the boundaries of the map for each marker
@@ -130,15 +133,47 @@ function populateInfoWindow(marker, infowindow) {
     //});
   }
 }
+//multiple markers are bouncing when selected.
+//adding bounce functionality to the marker when clicked.
+// code obtained from https://developers.google.com/maps/documentation/javascript/examples/marker-animations
+function toggleBounce(marker) {
+        if (marker.getAnimation() !== null) {
+          marker.setAnimation(null);
+        } else {
+          marker.setAnimation(google.maps.Animation.BOUNCE);
+        }
+      }
+
 
 // Constructor
 // Function expression
 var ViewModel = function() {
   var self = this;
-  this.myFirstObservable = ko.observable("hello");
+  this.locationsList = ko.observableArray(locations);
+  this.inputItem = ko.observable('');
+  console.log(this.inputItem);
+//used live search code from http://opensoul.org/2011/06/23/live-search-with-knockoutjs/
+  this.searchFilter= function (value){
+    console.log('searchFilter running ');
+    //remove all the location from the list
+    self.locationsList.removeAll();
+    console.log(value);
+    //value is the input from the textInput
+    //now we need to add the filtering
+    var loopList = self.locationsList;
+    for(var y in loopList) {
+      console.log('for loop working');
+      //add the logic
+      //if(beers[x].name.toLowerCase().indexOf(value.toLowerCase()) >= 0) {
+      //  viewModel.beers.push(beers[x]);
+      //}
+      if(loopList[y].title.toLowerCase().indexOf(value.toLowercase()) >= 0) {
+              console.log('if loop working');
+        self.loopList.push(loopList[y]);
+      }
+    }
 
-  this.myList = ko.observableArray(locations);
-
+  };
 };
 
 // https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Operators/new
@@ -147,5 +182,6 @@ appvm = new ViewModel();
 
 // Activate Knockout
 ko.applyBindings(appvm);
+appvm.inputItem.subscribe(appvm.searchFilter);
 
-
+//styling the list  use http://www.w3schools.com/bootstrap/bootstrap_list_groups.asp
