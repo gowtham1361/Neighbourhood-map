@@ -1,14 +1,13 @@
-var appvm;
 //TODO:
-//use textinput binding for dynamic searching
-// use Prepopulating an observableArray for the locations observable array
-//USE KNOCKOUT.JS
-// Normally we'd have these in a database instead.
+//use textinput binding for dynamic searching-done
 //Here i have used the code from GOOGLE MAPS APIS/Window shopping part 1 for displaying the map and the markers.
 // These are some of the locations of bangalore that will be shown to the user.
-// Better would be to research your own locations
+//declaring a global object to store the instance of ViewModel
+var appvm;
+
 var locations = [{
         title: 'ISKCON bangalore',
+
         location: {
             lat: 13.009466,
             lng: 77.55064
@@ -161,6 +160,8 @@ var ViewModel = function() {
     locations.forEach(function(item) {
         self.locationsList.push(new Location(item));
     });
+    //this.markersList= ko.observableArray([]);
+
     // setting up a observable to  be notified by the  input search box.
     this.inputItem = ko.observable('');
     //used live search code from http://opensoul.org/2011/06/23/live-search-with-knockoutjs/
@@ -176,10 +177,33 @@ var ViewModel = function() {
             //add the logic finding whether the indexof() returns a matching value in the looplist array.
             if (locations[y].title.toLowerCase().indexOf(value.toLowerCase()) >= 0) {
                 //pushing the matching locations to the self.locationsList ko.observableArray
+                //locations[y].boolValue=
+                console.log('the markers array in searchFilter: ', markers);
                 self.locationsList.push(locations[y]);
             }
+            //try to add markerfiltering here with the same loop for markers array
+            //the problem will be how to hide the remaining markers and show the filtered markers.
         }
 
+    };
+
+    //add marker filtering here
+    //working fine
+    this.markerFilterfn = function(value) {
+        console.log('markerFilterfn running');
+        for (var x in markers) {
+            console.log('markerFilterfn for loop  running');
+            //set map for markers as null
+            console.log('the value of marker.map: ', markers[x].map);
+            if (markers[x].setMap(map) !== null) {
+                markers[x].setMap(null);
+                console.log('the value of marker.map after null :', markers[x].map);
+            }
+            if (markers[x].title.toLowerCase().indexOf(value.toLowerCase()) >= 0) {
+                //set map to map for the markers filtered
+                markers[x].setMap(map);
+            }
+        }
     };
 };
 
@@ -189,6 +213,8 @@ appvm = new ViewModel();
 
 // Activate Knockout
 ko.applyBindings(appvm);
+//using subscribe method of ko to the observalble appvm.inputItem
 appvm.inputItem.subscribe(appvm.searchFilter);
+appvm.inputItem.subscribe(appvm.markerFilterfn);
 
 //styling the list  use http://www.w3schools.com/bootstrap/bootstrap_list_groups.asp
