@@ -6,10 +6,11 @@
     <meta http-equiv="X-UA-Compatible" content="IE=edge">
     <title>Neighbourhood Map </title>
     <meta name="viewport" content="width=device-width, initial-scale=1">
+    <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/css/bootstrap.min.css">
     <link rel="stylesheet" href="css/normalize.css">
     <style>
         html,
-        body {
+        body{
             height: 100%;
             margin: 0 auto;
         }
@@ -72,11 +73,13 @@
             <input class='search_bar' type="text" name="search" placeholder="Search.." autocomplete='off' data-bind='textInput: inputItem'>
         </form>
         <ul data-bind="foreach: locationsList">
-            <li class='locationlist'><b data-bind="text: title"></b></li>
+            <li class='locationlist'><b data-bind="text: title  , click: $parent.displayInfoBounce"></b></li>
         </ul>
     </div>
 
 </body>
+<script src="https://ajax.googleapis.com/ajax/libs/jquery/3.1.1/jquery.min.js"></script>
+<script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/js/bootstrap.min.js"></script>
 <script src="js/map.js"></script>
 <script src="https://maps.googleapis.com/maps/api/js?key=AIzaSyCGXlcl6frLMK3SHnE4GMCnCBzEEWtA4u8&callback=initMap" async defer></script>
 

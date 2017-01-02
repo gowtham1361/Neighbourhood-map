@@ -140,6 +140,10 @@ function toggleBounce(marker) {
         marker.setAnimation(null);
     } else {
         marker.setAnimation(google.maps.Animation.BOUNCE);
+        //to make the bouncing stop after a few ms
+        setTimeout(function() {
+        marker.setAnimation(null);
+  }, 2000);
     }
 }
 
@@ -154,13 +158,15 @@ var Location = function(locationData) {
 // Constructor
 // Function expression
 var ViewModel = function() {
+
     var self = this;
     this.locationsList = ko.observableArray([]);
     //using the Location constructor similar to the Cat constructor  in adding more cats video and pushing to the locationList array
     locations.forEach(function(item) {
         self.locationsList.push(new Location(item));
     });
-    //this.markersList= ko.observableArray([]);
+    this.markersList= ko.observableArray(markers);
+    console.log("marker list title",this.markersList);
 
     // setting up a observable to  be notified by the  input search box.
     this.inputItem = ko.observable('');
@@ -204,6 +210,12 @@ var ViewModel = function() {
                 markers[x].setMap(map);
             }
         }
+    };
+    //adding the displayInfoBounce function when the list is clicked
+    this.displayInfoBounce = function(clickedItem) {
+        console.log(clickedItem,"this is:",this);
+        //console.log(marker);
+        //toggleBounce(clickedItem);
     };
 };
 
