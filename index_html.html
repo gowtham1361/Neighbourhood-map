@@ -10,7 +10,7 @@
     <link rel="stylesheet" href="css/normalize.css">
     <style>
         html,
-        body{
+        body {
             height: 100%;
             margin: 0 auto;
         }
@@ -67,16 +67,19 @@
 </head>
 
 <body>
-    <div id="map"></div>
-    <div id="floating-panel">
-        <form class='search_bar'>
-            <input class='search_bar' type="text" name="search" placeholder="Search.." autocomplete='off' data-bind='textInput: inputItem'>
-        </form>
-        <ul data-bind="foreach: locationsList">
-            <li class='locationlist'><b data-bind="text: title  , click: $parent.displayInfoBounce"></b></li>
-        </ul>
+    <div class="container-fluid">
+        <section class="row">
+            <div class="col-md-10" id="map"></div>
+            <div class="col-md-2" id="floating-panel">
+                <form class='search_bar'>
+                    <input class='search_bar' type="text" name="search" placeholder="Search.." autocomplete='off' data-bind='textInput: inputItem'>
+                </form>
+                <ul class="list-group" data-bind="foreach: locationsList">
+                    <li class='locationlist list-group-item'><b data-bind="text: title  , click: $parent.displayInfoBounce"></b></li>
+                </ul>
+            </div>
+        </section>
     </div>
-
 </body>
 <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.1.1/jquery.min.js"></script>
 <script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/js/bootstrap.min.js"></script>

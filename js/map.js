@@ -142,16 +142,20 @@ function toggleBounce(marker) {
         marker.setAnimation(google.maps.Animation.BOUNCE);
         //to make the bouncing stop after a few ms
         setTimeout(function() {
-        marker.setAnimation(null);
-  }, 2000);
+            marker.setAnimation(null);
+        }, 2000);
     }
 }
 
 //Location constructor similar to Cat constructor
-var Location = function(locationData) {
+var Location = function(locationData, i) {
+    console.log('i value in Location constructor:', i);
     this.title = ko.observable(locationData.title);
     this.lat = ko.observable(locationData.location.lat);
     this.lng = ko.observable(locationData.location.lng);
+    //console.log(locationData.marker);
+    //this.marker = ko.observable();
+    this.id = ko.observable(i);
 };
 
 
@@ -162,17 +166,40 @@ var ViewModel = function() {
     var self = this;
     this.locationsList = ko.observableArray([]);
     //using the Location constructor similar to the Cat constructor  in adding more cats video and pushing to the locationList array
+    //using the i value to give id's to the locations
+    var i = 0;
     locations.forEach(function(item) {
-        self.locationsList.push(new Location(item));
+        self.locationsList.push(new Location(item, i));
+        i++;
+        //self.markersList.push();
     });
-    this.markersList= ko.observableArray(markers);
-    console.log("marker list title",this.markersList);
+    //making an observableArray
+    this.markersList = ko.observableArray([]);
+
+    /*for (var i = 0; i < locations.length; i++) {
+        // Get the position from the location array.
+        var position = locations[i].location;
+        var title = locations[i].title;
+        // Create a marker per location, and put into markersList ObservableArray.
+        var marker = new google.maps.Marker({
+            map: map,
+            position: position,
+            title: title,
+            animation: google.maps.Animation.DROP,
+            id: i
+        });
+        // Push the marker to our array of markersList().
+        self.markersList.push(marker);
+    }
+    */
+    console.log("marker list title ", self.markersList());
+    //console.log('locationsList ', self.locationsList());
 
     // setting up a observable to  be notified by the  input search box.
     this.inputItem = ko.observable('');
     //used live search code from http://opensoul.org/2011/06/23/live-search-with-knockoutjs/
     this.searchFilter = function(value) {
-        console.log('searchFilter running ');
+        console.log('searchFilter running');
         //remove all the location from the list
         self.locationsList.removeAll();
         console.log(value);
@@ -213,9 +240,9 @@ var ViewModel = function() {
     };
     //adding the displayInfoBounce function when the list is clicked
     this.displayInfoBounce = function(clickedItem) {
-        console.log(clickedItem,"this is:",this);
-        //console.log(marker);
-        //toggleBounce(clickedItem);
+        console.log(self.markersList());
+        console.log(self.locationsList());
+        //can we use event trigger method.
     };
 };
 
@@ -225,6 +252,7 @@ appvm = new ViewModel();
 
 // Activate Knockout
 ko.applyBindings(appvm);
+//moved to the map init function
 //using subscribe method of ko to the observalble appvm.inputItem
 appvm.inputItem.subscribe(appvm.searchFilter);
 appvm.inputItem.subscribe(appvm.markerFilterfn);
