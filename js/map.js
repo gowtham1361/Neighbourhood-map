@@ -148,14 +148,14 @@ function toggleBounce(marker) {
 }
 
 //Location constructor similar to Cat constructor
-var Location = function(locationData, i) {
-    console.log('i value in Location constructor:', i);
-    this.title = ko.observable(locationData.title);
-    this.lat = ko.observable(locationData.location.lat);
-    this.lng = ko.observable(locationData.location.lng);
+var Location = function(locationData, id) {
+    //console.log('i value in Location constructor:', i);
+    this.title = locationData.title; //ko.observable(locationData.title);
+    this.lat = locationData.location.lat; //ko.observable(locationData.location.lat);
+    this.lng = locationData.location.lng; //ko.observable(locationData.location.lng);
     //console.log(locationData.marker);
     //this.marker = ko.observable();
-    this.id = ko.observable(i);
+    this.id = id;//ko.observable(i);
 };
 
 
@@ -167,10 +167,8 @@ var ViewModel = function() {
     this.locationsList = ko.observableArray([]);
     //using the Location constructor similar to the Cat constructor  in adding more cats video and pushing to the locationList array
     //using the i value to give id's to the locations
-    var i = 0;
-    locations.forEach(function(item) {
+    locations.forEach(function(item, i) {
         self.locationsList.push(new Location(item, i));
-        i++;
         //self.markersList.push();
     });
     //making an observableArray
@@ -192,17 +190,17 @@ var ViewModel = function() {
         self.markersList.push(marker);
     }
     */
-    console.log("marker list title ", self.markersList());
+    //console.log("marker list title ", self.markersList());
     //console.log('locationsList ', self.locationsList());
 
     // setting up a observable to  be notified by the  input search box.
     this.inputItem = ko.observable('');
     //used live search code from http://opensoul.org/2011/06/23/live-search-with-knockoutjs/
     this.searchFilter = function(value) {
-        console.log('searchFilter running');
+      //  console.log('searchFilter running');
         //remove all the location from the list
         self.locationsList.removeAll();
-        console.log(value);
+   //     console.log(value);
         //value is the input from the textInput
         //now we need to add the filtering
         //here the locations is the hardcoded list on top of map.js
@@ -211,7 +209,7 @@ var ViewModel = function() {
             if (locations[y].title.toLowerCase().indexOf(value.toLowerCase()) >= 0) {
                 //pushing the matching locations to the self.locationsList ko.observableArray
                 //locations[y].boolValue=
-                console.log('the markers array in searchFilter: ', markers);
+               // console.log('the markers array in searchFilter: ', markers);
                 self.locationsList.push(locations[y]);
             }
             //try to add markerfiltering here with the same loop for markers array
@@ -223,14 +221,14 @@ var ViewModel = function() {
     //add marker filtering here
     //working fine
     this.markerFilterfn = function(value) {
-        console.log('markerFilterfn running');
+        //console.log('markerFilterfn running');
         for (var x in markers) {
-            console.log('markerFilterfn for loop  running');
+           // console.log('markerFilterfn for loop  running');
             //set map for markers as null
-            console.log('the value of marker.map: ', markers[x].map);
+            //console.log('the value of marker.map: ', markers[x].map);
             if (markers[x].setMap(map) !== null) {
                 markers[x].setMap(null);
-                console.log('the value of marker.map after null :', markers[x].map);
+               // console.log('the value of marker.map after null :', markers[x].map);
             }
             if (markers[x].title.toLowerCase().indexOf(value.toLowerCase()) >= 0) {
                 //set map to map for the markers filtered
@@ -240,9 +238,18 @@ var ViewModel = function() {
     };
     //adding the displayInfoBounce function when the list is clicked
     this.displayInfoBounce = function(clickedItem) {
-        console.log(self.markersList());
-        console.log(self.locationsList());
-        //can we use event trigger method.
+        var index = clickedItem.id;
+        var marker = markers[index];
+        // console.log("click");
+        //console.log(clickedItem);
+        //console.log(markers[index]);
+
+        google.maps.event.trigger(marker, 'click');
+        // google.maps.trigger(markers[clickedItem.id], 'click');
+
+        //console.log(self.markersList());
+        //console.log(self.locationsList());
+        //can we use event trigger method.j
     };
 };
 
