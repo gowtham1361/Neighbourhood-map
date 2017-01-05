@@ -1,6 +1,5 @@
 //TODO:
 //use textinput binding for dynamic searching-done
-//Here i have used the code from GOOGLE MAPS APIS/Window shopping part 1 for displaying the map and the markers.
 // These are some of the locations of bangalore that will be shown to the user.
 //declaring a global object to store the instance of ViewModel
 var appvm;
@@ -74,6 +73,8 @@ var locations = [{
 var map;
 // Create a new blank array for all the listing markers.
 var markers = [];
+
+//Here i have used the code from GOOGLE MAPS APIS/Window shopping part 1 for displaying the map and the markers and infowindow.
 
 function initMap() {
     // Constructor creates a new map - only center and zoom are required.
@@ -149,13 +150,10 @@ function toggleBounce(marker) {
 
 //Location constructor similar to Cat constructor
 var Location = function(locationData, id) {
-    //console.log('i value in Location constructor:', i);
-    this.title = locationData.title; //ko.observable(locationData.title);
-    this.lat = locationData.location.lat; //ko.observable(locationData.location.lat);
-    this.lng = locationData.location.lng; //ko.observable(locationData.location.lng);
-    //console.log(locationData.marker);
-    //this.marker = ko.observable();
-    this.id = id;//ko.observable(i);
+    this.title = locationData.title;
+    this.lat = locationData.location.lat;
+    this.lng = locationData.location.lng;
+    this.id = id;
 };
 
 
@@ -169,29 +167,7 @@ var ViewModel = function() {
     //using the i value to give id's to the locations
     locations.forEach(function(item, i) {
         self.locationsList.push(new Location(item, i));
-        //self.markersList.push();
     });
-    //making an observableArray
-    this.markersList = ko.observableArray([]);
-
-    /*for (var i = 0; i < locations.length; i++) {
-        // Get the position from the location array.
-        var position = locations[i].location;
-        var title = locations[i].title;
-        // Create a marker per location, and put into markersList ObservableArray.
-        var marker = new google.maps.Marker({
-            map: map,
-            position: position,
-            title: title,
-            animation: google.maps.Animation.DROP,
-            id: i
-        });
-        // Push the marker to our array of markersList().
-        self.markersList.push(marker);
-    }
-    */
-    //console.log("marker list title ", self.markersList());
-    //console.log('locationsList ', self.locationsList());
 
     // setting up a observable to  be notified by the  input search box.
     this.inputItem = ko.observable('');
@@ -200,56 +176,40 @@ var ViewModel = function() {
       //  console.log('searchFilter running');
         //remove all the location from the list
         self.locationsList.removeAll();
-   //     console.log(value);
-        //value is the input from the textInput
         //now we need to add the filtering
         //here the locations is the hardcoded list on top of map.js
         for (var y in locations) {
             //add the logic finding whether the indexof() returns a matching value in the looplist array.
             if (locations[y].title.toLowerCase().indexOf(value.toLowerCase()) >= 0) {
-                //pushing the matching locations to the self.locationsList ko.observableArray
-                //locations[y].boolValue=
-               // console.log('the markers array in searchFilter: ', markers);
+                //pushing the matching locations to the self.locationsList ko.observableArray.
                 self.locationsList.push(locations[y]);
             }
-            //try to add markerfiltering here with the same loop for markers array
-            //the problem will be how to hide the remaining markers and show the filtered markers.
         }
 
     };
 
     //add marker filtering here
-    //working fine
+    //similar to the searchFilter function
     this.markerFilterfn = function(value) {
-        //console.log('markerFilterfn running');
         for (var x in markers) {
-           // console.log('markerFilterfn for loop  running');
             //set map for markers as null
-            //console.log('the value of marker.map: ', markers[x].map);
             if (markers[x].setMap(map) !== null) {
                 markers[x].setMap(null);
-               // console.log('the value of marker.map after null :', markers[x].map);
             }
             if (markers[x].title.toLowerCase().indexOf(value.toLowerCase()) >= 0) {
-                //set map to map for the markers filtered
+                //setMap to map for the markers filtered
                 markers[x].setMap(map);
             }
         }
     };
+
     //adding the displayInfoBounce function when the list is clicked
+    //use the id of the clickedItem to access the corresponding marker and trigger the click event for the corresponding marker
     this.displayInfoBounce = function(clickedItem) {
         var index = clickedItem.id;
         var marker = markers[index];
-        // console.log("click");
-        //console.log(clickedItem);
-        //console.log(markers[index]);
-
         google.maps.event.trigger(marker, 'click');
         // google.maps.trigger(markers[clickedItem.id], 'click');
-
-        //console.log(self.markersList());
-        //console.log(self.locationsList());
-        //can we use event trigger method.j
     };
 };
 
@@ -264,4 +224,3 @@ ko.applyBindings(appvm);
 appvm.inputItem.subscribe(appvm.searchFilter);
 appvm.inputItem.subscribe(appvm.markerFilterfn);
 
-//styling the list  use http://www.w3schools.com/bootstrap/bootstrap_list_groups.asp
