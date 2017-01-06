@@ -15,37 +15,17 @@
             margin: 0 auto;
         }
 
-        #map {
-            height: 90%;
-            width: 90%;
-            left: 30%;
-        }
-
         .container-fluid,
         .row,
-        .col-md-10 {
+        .col-md-10,
+        .col-xs-8,
+        .col-lg-9 {
             height: 100%;
-        }
-
-        #floating-panel {
-            position: absolute;
-            top: 0;
-            right: 60%;
             margin: 0 auto;
-            z-index: 5;
-            height: 90%;
-            width: 30%;
-            background-color: blue;
-            padding: 5px;
-            border: 1px solid #999;
-            text-align: center;
-            font-family: 'Roboto', 'sans-serif';
-            line-height: 30px;
-            padding-left: 10px;
         }
 
         input[type=text] {
-            width: 60%;
+            width: 50%;
             box-sizing: border-box;
             border: 2px solid #ccc;
             border-radius: 4px;
@@ -61,12 +41,8 @@
         }
 
         .search_bar:focus {
-            width: 80%;
+            width: 60%;
             margin: 0 auto;
-        }
-
-        .locationlist {
-            display: inline-block;
         }
     </style>
     <script src="https://cdnjs.cloudflare.com/ajax/libs/knockout/3.4.1/knockout-min.js"></script>
@@ -75,15 +51,13 @@
 <body>
     <div class="container-fluid">
         <section class="row">
-            <div class="col-md-10" id="map"></div>
-            <div class="col-md-2" id="floating-panel">
-                <form class='search_bar'>
-                    <input class='search_bar' type="text" name="search" placeholder="Search.." autocomplete='off' data-bind='textInput: inputItem'>
-                </form>
-                <ul class="list-group" data-bind="foreach: locationsList">
-                    <li class='locationlist list-group-item'><b data-bind="text: title  , click: $parent.displayInfoBounce"></b></li>
-                </ul>
+            <div class="search_bar">
+                <input class='search_bar' type="text" name="search" placeholder="Search.." autocomplete='off' data-bind='textInput: inputItem'>
             </div>
+            <ul class="list-group  col-md-2  col-xs-4 col-lg-3 " data-bind="foreach: locationsList">
+                <li class='locationlist list-group-item'><b data-bind="text: title  , click: $parent.displayInfoBounce"></b></li>
+            </ul>
+            <div class="col-md-10 col-xs-8 col-lg-9" id="map"></div>
         </section>
     </div>
 </body>

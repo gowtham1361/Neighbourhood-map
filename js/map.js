@@ -3,7 +3,7 @@
 // These are some of the locations of bangalore that will be shown to the user.
 //declaring a global object to store the instance of ViewModel
 var appvm;
-
+ var zomatoApiKey= "a7bf9336e17828a0a2f2a603c6a9c246";
 var locations = [{
         title: 'ISKCON bangalore',
 
@@ -27,7 +27,7 @@ var locations = [{
         }
     },
     {
-        title: 'Amrita Vishwa Vidyapeetham University,',
+        title: 'Amrita Vishwa Vidyapeetham University',
         location: {
             lat: 12.89527,
             lng: 77.675362
