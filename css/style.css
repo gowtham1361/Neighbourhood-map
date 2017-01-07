@@ -1,0 +1,35 @@
+        html,
+        body {
+            height: 100%;
+            margin: 0 auto;
+        }
+
+        .container-fluid,
+        .row,
+        .col-md-10,
+        .col-xs-8,
+        .col-lg-9 {
+            height: 100%;
+            margin: 0 auto;
+        }
+
+        input[type=text] {
+            width: 50%;
+            box-sizing: border-box;
+            border: 2px solid #ccc;
+            border-radius: 4px;
+            margin: 10px;
+            font-size: 16px;
+            background-color: white;
+            background-image: url('img/toolbar_find.png');
+            background-position: 3px 7px;
+            background-repeat: no-repeat;
+            padding: 12px 20px 12px 40px;
+            -webkit-transition: width 0.4s ease-in-out;
+            transition: width 0.4s ease-in-out;
+        }
+
+        .search_bar:focus {
+            width: 60%;
+            margin: 0 auto;
+        }

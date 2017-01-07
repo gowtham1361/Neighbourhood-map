@@ -27,24 +27,24 @@ var locations = [{
         }
     },
     {
-        title: 'Orion Mall',
+        title: 'The Leela Palace',
         location: {
-            lat: 13.010788,
-            lng: 77.554902
+            lat: 12.960146,
+            lng: 77.648496
         }
     },
     {
-        title: 'Mantri Square Mall',
+        title: 'Sri Sagar (Formerly CTR)',
         location: {
-            lat: 12.991723,
-            lng: 77.570553
+            lat: 12.998344,
+            lng: 77.569722
         }
     },
     {
-        title: 'Phoenix Marketcity',
+        title: 'Barbeque Nation',
         location: {
-            lat: 12.997128,
-            lng: 77.696323
+            lat: 12.925531,
+            lng: 77.637103
         }
     },
     {
@@ -120,6 +120,11 @@ function initMap() {
     // Extend the boundaries of the map for each marker
     map.fitBounds(bounds);
 }
+//error handling function for map
+function mapFail() {
+    alert("sorry");
+    $("#map").text(' something wrong with the map ,inconvenience regretted try again later');
+}
 
 // This function populates the infowindow when the marker is clicked. We'll only allow
 // one infowindow which will open at the marker that is clicked, and populate based
@@ -135,6 +140,7 @@ function populateInfoWindow(marker, infowindow) {
     $.getJSON(url, function(data) {
         //storing the  phone number in phoneNo variable
         phoneNo = data.response.venues[0].contact.phone;
+        console.log(phoneNo);
         infowindow.setContent('<div>' + '<b>' + marker.title + '</b>' + '</div>' +
             '<div>' + 'phone: ' + phoneNo + '</div>' +
             '<div>' + 'powered by ' + '<b>' + ' Foursquare' + '</b>' + '</div>');
