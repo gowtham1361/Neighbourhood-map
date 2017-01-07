@@ -1,43 +1,36 @@
 //TODO:
-//use textinput binding for dynamic searching-done
+//https://api.foursquare.com/v2/venues/search?ll=12.955155,77.585466&client_id=JEKKICPOXJXLKTOYHA535NWKZK35SI31G2ILXD42IU0ETRPM&client_secret=5UKJWXIY44IKDUVU43WK4VYXBKXNRHKNVTMLYQAB0IDOD3DP&v=20131016
 // These are some of the locations of bangalore that will be shown to the user.
 //declaring a global object to store the instance of ViewModel
 var appvm;
- var zomatoApiKey= "a7bf9336e17828a0a2f2a603c6a9c246";
+
 var locations = [{
-        title: 'ISKCON bangalore',
+        title: 'The Forum',
 
         location: {
-            lat: 13.009466,
-            lng: 77.55064
+            lat:  12.934545,
+            lng: 77.611308
         }
     },
     {
-        title: 'Lalbagh Botanical Garden',
+        title: 'MTR Hotel',
         location: {
-            lat: 12.950747,
-            lng: 77.584773
+            lat: 12.955155,
+            lng: 77.585466
         }
     },
     {
-        title: ' Indian Institute of Science',
+        title: ' Truffles',
         location: {
-            lat: 13.02186,
-            lng: 77.567142
+            lat: 12.971856,
+            lng: 77.60095
         }
     },
     {
-        title: 'Amrita Vishwa Vidyapeetham University',
+        title: 'Orion Mall',
         location: {
-            lat: 12.89527,
-            lng: 77.675362
-        }
-    },
-    {
-        title: 'Christ University',
-        location: {
-            lat: 12.934887,
-            lng: 77.605791
+            lat: 13.010788,
+            lng: 77.554902
         }
     },
     {
@@ -48,10 +41,10 @@ var locations = [{
         }
     },
     {
-        title: 'Kempegowda International Airport',
+        title: 'Phoenix Marketcity',
         location: {
-            lat: 13.198635,
-            lng: 77.706593
+            lat: 12.997128,
+            lng: 77.696323
         }
     },
     {
@@ -62,14 +55,27 @@ var locations = [{
         }
     },
     {
-        title: ' International Tech Park Bangalore',
+        title: ' UB city',
         location: {
-            lat: 12.986483,
-            lng: 77.737184
+            lat: 12.971508,
+            lng: 77.596409
         }
     },
 ];
 
+//foursquare api credentials
+var four_squareApi= {
+    ID : 'JEKKICPOXJXLKTOYHA535NWKZK35SI31G2ILXD42IU0ETRPM',
+    SECRET:'5UKJWXIY44IKDUVU43WK4VYXBKXNRHKNVTMLYQAB0IDOD3DP'
+};
+
+ var url = 'https://api.foursquare.com/v2/venues/search?' + 'll='+ locations[1].location.lat + ',' + locations[1].location.lng +'&client_id=' + four_squareApi.ID + '&client_secret=' +  four_squareApi.SECRET +  '&v=20131016';
+console.log('url:', url);
+$.getJSON(url , function(data) {
+console.log(data);
+var phone = data.response.venues[0].contact.phone;
+console.log('phone :',phone);
+});
 var map;
 // Create a new blank array for all the listing markers.
 var markers = [];
