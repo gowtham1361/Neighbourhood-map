@@ -6,60 +6,67 @@ var appvm;
 
 var locations = [{
         title: 'The Forum',
-
         location: {
             lat:  12.934545,
             lng: 77.611308
-        }
+        },
+        phone: 'nill'
     },
     {
         title: 'MTR Hotel',
         location: {
             lat: 12.955155,
             lng: 77.585466
-        }
+        },
+        phone: 'nill'
     },
     {
         title: ' Truffles',
         location: {
             lat: 12.971856,
             lng: 77.60095
-        }
+        },
+        phone: 'nill'
     },
     {
         title: 'Orion Mall',
         location: {
             lat: 13.010788,
             lng: 77.554902
-        }
+        },
+        phone: 'nill'
     },
     {
         title: 'Mantri Square Mall',
         location: {
             lat: 12.991723,
             lng: 77.570553
-        }
+        },
+        phone:'nill'
     },
     {
         title: 'Phoenix Marketcity',
         location: {
             lat: 12.997128,
             lng: 77.696323
-        }
+        },
+        phone:'nill'
     },
     {
         title: 'M Chinnaswamy Stadium',
         location: {
             lat: 12.97883,
             lng: 77.599615
-        }
+        },
+        phone:'nill'
     },
     {
         title: ' UB city',
         location: {
             lat: 12.971508,
             lng: 77.596409
-        }
+        },
+        phone:''
     },
 ];
 
@@ -69,13 +76,7 @@ var four_squareApi= {
     SECRET:'5UKJWXIY44IKDUVU43WK4VYXBKXNRHKNVTMLYQAB0IDOD3DP'
 };
 
- var url = 'https://api.foursquare.com/v2/venues/search?' + 'll='+ locations[1].location.lat + ',' + locations[1].location.lng +'&client_id=' + four_squareApi.ID + '&client_secret=' +  four_squareApi.SECRET +  '&v=20131016';
-console.log('url:', url);
-$.getJSON(url , function(data) {
-console.log(data);
-var phone = data.response.venues[0].contact.phone;
-console.log('phone :',phone);
-});
+
 var map;
 // Create a new blank array for all the listing markers.
 var markers = [];
@@ -96,8 +97,24 @@ function initMap() {
     var largeInfowindow = new google.maps.InfoWindow();
     var bounds = new google.maps.LatLngBounds();
 
+
     // The following group uses the location array to create an array of markers on initialize.
     for (var i = 0; i < locations.length; i++) {
+
+         //retrieving contact no of the place via foursquare api.
+        //how to add the phone no to the infowindow .
+        var url ='https://api.foursquare.com/v2/venues/search?' + 'll='+ locations[i].location.lat + ',' + locations[i].location.lng +'&client_id=' + four_squareApi.ID + '&client_secret=' +  four_squareApi.SECRET +  '&v=20131016';
+        $.getJSON(url , function(data) {
+            console.log(data);
+            //storing the  phone number in phoneNo variable
+              var phoneNo = data.response.venues[0].contact.phone;
+              locations[i].phone = phoneNo;
+              console.log('location phone', locations[i].phone)
+            console.log('phone :', phoneNo);//'location phone: ',locations[i]
+        }).fail(function() {
+            console.log('fail');
+            });
+
         // Get the position from the location array.
         var position = locations[i].location;
         var title = locations[i].title;
@@ -129,6 +146,9 @@ function initMap() {
 // on that markers position.
 function populateInfoWindow(marker, infowindow) {
     // Check to make sure the infowindow is not already opened on this marker.
+    for (var i = 0; i < locations.length; i++){
+
+    }
     if (infowindow.marker != marker) {
         infowindow.marker = marker;
         infowindow.setContent('<div>' + marker.title + '</div>');
@@ -159,6 +179,7 @@ var Location = function(locationData, id) {
     this.title = locationData.title;
     this.lat = locationData.location.lat;
     this.lng = locationData.location.lng;
+    this.phone = locationData.location.phone;
     this.id = id;
 };
 
