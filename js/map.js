@@ -1,10 +1,5 @@
-//TODO:
-//error handlings to be taken care of.
-//https://api.foursquare.com/v2/venues/search?ll=12.955155,77.585466&client_id=JEKKICPOXJXLKTOYHA535NWKZK35SI31G2ILXD42IU0ETRPM&client_secret=5UKJWXIY44IKDUVU43WK4VYXBKXNRHKNVTMLYQAB0IDOD3DP&v=20131016
-// These are some of the locations of bangalore that will be shown to the user.
-//declaring a global object to store the instance of ViewModel
-var appvm;
 
+// These are some of the locations of bangalore that will be shown to the user.
 var locations = [{
         title: 'The Forum',
         location: {
@@ -71,8 +66,9 @@ var four_squareApi = {
 
 
 var map;
+
 // Create a new blank array for all the listing markers.
-var markers = [];
+//var markers = [];
 
 //Here i have used the code from GOOGLE MAPS APIS/Window shopping part 1 for displaying the map and the markers and infowindow.
 
@@ -91,7 +87,7 @@ function initMap() {
     var bounds = new google.maps.LatLngBounds();
 
 
-    // The following group uses the location array to create an array of markers on initialize.
+    // The following group uses the locations array to create marker attribute for each location on initialize.
 
     for (var i = 0; i < locations.length; i++) {
 
@@ -106,8 +102,9 @@ function initMap() {
             animation: google.maps.Animation.DROP,
             id: i
         });
-        // Push the marker to our array of markers.
-        markers.push(marker);
+        // Push the marker to our array of locations.
+        //changed to use the locations array to have a marker attribute for each location here
+        locations[i].marker = marker;
         // Create an onclick event to open an infowindow at each marker.
         marker.addListener('click', function() {
             populateInfoWindow(this, largeInfowindow);
@@ -115,14 +112,17 @@ function initMap() {
         marker.addListener('click', function() {
             toggleBounce(this);
         });
-        bounds.extend(markers[i].position);
+        bounds.extend(locations[i].location); //change here
     }
     // Extend the boundaries of the map for each marker
     map.fitBounds(bounds);
+    //Activate Knockout here because we need the google object it provides.
+    ko.applyBindings(new ViewModel);
 }
+
 //error handling function for map
 function mapFail() {
-    alert("sorry");
+    alert("oops! looks like google is busy :)) try again later ");
     $("#map").text(' something wrong with the map ,inconvenience regretted try again later');
 }
 
@@ -140,16 +140,12 @@ function populateInfoWindow(marker, infowindow) {
     $.getJSON(url, function(data) {
         //storing the  phone number in phoneNo variable
         phoneNo = data.response.venues[0].contact.phone;
-        console.log(phoneNo);
         infowindow.setContent('<div>' + '<b>' + marker.title + '</b>' + '</div>' +
             '<div>' + 'phone: ' + phoneNo + '</div>' +
             '<div>' + 'powered by ' + '<b>' + ' Foursquare' + '</b>' + '</div>');
-
     }).fail(function(err) {
-        //this part is not working when the response fails
-        console.log('fail');
         infowindow.setContent('<div>' + marker.title + '</div>' +
-            '<div>' + 'phone:' + phoneNo + ' failed to access foursquare :(' + '</div>' +
+            '<div>' + ' failed to access foursquare :(' + '</div>' +
             '<div>' + 'powered by' + '<b>' + ' ' + ' Foursquare' + '</b>' + '</div>');
     });
     // Check to make sure the infowindow is not already opened on this marker.
@@ -157,14 +153,10 @@ function populateInfoWindow(marker, infowindow) {
         infowindow.marker = marker;
         infowindow.setContent('<div>' + marker.title + '</div>');
         infowindow.open(map, marker);
-        //Make sure the marker property is cleared if the infowindow is closed.
-        //infowindow.addListener('closeclick', function() {
-        //infowindow.setMarker(null);
-        //});
     }
 }
 
-//multiple markers are bouncing when selected.
+
 //adding bounce functionality to the marker when clicked.
 // code obtained from https://developers.google.com/maps/documentation/javascript/examples/marker-animations
 function toggleBounce(marker) {
@@ -176,7 +168,7 @@ function toggleBounce(marker) {
         //to make the bouncing stop after a few ms
         setTimeout(function() {
             marker.setAnimation(null);
-        }, 2000);
+        }, 2100);
     }
 }
 
@@ -186,6 +178,7 @@ var Location = function(locationData, id) {
     this.title = locationData.title;
     this.lat = locationData.location.lat;
     this.lng = locationData.location.lng;
+    this.marker = locationData.marker;
     this.id = id;
 };
 
@@ -195,7 +188,7 @@ var Location = function(locationData, id) {
 var ViewModel = function() {
 
     var self = this;
-    this.locationsList = ko.observableArray([]);
+    self.locationsList = ko.observableArray([]);
     //using the Location constructor similar to the Cat constructor  in adding more cats video and pushing to the locationList array
     //using the i value to give id's to the locations
     locations.forEach(function(item, i) {
@@ -203,10 +196,9 @@ var ViewModel = function() {
     });
 
     // setting up a observable to  be notified by the  input search box.
-    this.inputItem = ko.observable('');
+    self.inputItem = ko.observable('');
     //used live search code from http://opensoul.org/2011/06/23/live-search-with-knockoutjs/
-    this.searchFilter = function(value) {
-        //  console.log('searchFilter running');
+    self.searchFilter = function(value) {
         //remove all the location from the list
         self.locationsList.removeAll();
         //now we need to add the filtering
@@ -223,38 +215,31 @@ var ViewModel = function() {
 
     //add marker filtering here
     //similar to the searchFilter function
-    this.markerFilterfn = function(value) {
+    self.markerFilterfn = function(value) {
 
-        for (var x in markers) {
+        for (var x in locations) {
             //set map for markers as null
-            if (markers[x].setMap(map) !== null) {
-                markers[x].setMap(null);
+            if (locations[x].marker.setMap(map) !== null) {
+                locations[x].marker.setMap(null);
             }
-            if (markers[x].title.toLowerCase().indexOf(value.toLowerCase()) >= 0) {
+            if (locations[x].marker.title.toLowerCase().indexOf(value.toLowerCase()) >= 0) {
                 //setMap to map for the markers filtered
-                markers[x].setMap(map);
+                locations[x].marker.setMap(map);
             }
         }
     };
 
     //adding the displayInfoBounce function when the list is clicked
     //use the id of the clickedItem to access the corresponding marker and trigger the click event for the corresponding marker
-    this.displayInfoBounce = function(clickedItem) {
+    self.displayInfoBounce = function(clickedItem) {
 
         var index = clickedItem.id;
-        var marker = markers[index];
+        //var marker = markers[index];
+        var marker = clickedItem.marker;
         google.maps.event.trigger(marker, 'click');
         // google.maps.trigger(markers[clickedItem.id], 'click');
     };
+    self.inputItem.subscribe(self.searchFilter);
+    self.inputItem.subscribe(self.markerFilterfn);
+
 };
-
-// https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Operators/new
-// Instantiate the ViewModel
-appvm = new ViewModel();
-
-// Activate Knockout
-ko.applyBindings(appvm);
-
-//using subscribe method of ko to the observalble appvm.inputItem
-appvm.inputItem.subscribe(appvm.searchFilter);
-appvm.inputItem.subscribe(appvm.markerFilterfn);
